@@ -30,12 +30,14 @@ namespace Product.API.Controllers
 
         [HttpGet]
         public async Task<ActionResult> Get(
+                        [FromQuery] string orderBy = "ProductId",
+                        [FromQuery] bool ascending = true,
                         [FromQuery, Range(1, int.MaxValue)] int page = 1,
                         [FromQuery, Range(1, 50)] int quantity = 5)
         {
             try
             {
-                var result = await _productService.GetAllProductsAsync(page, quantity);
+                var result = await _productService.GetAllProductsAsync(page, quantity,orderBy,ascending);
 
                 if (!result.Any())
                     return NoContent();

@@ -2,6 +2,7 @@
 using Product.API.InputModels;
 using Product.API.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,52 @@ namespace Product.API.Services
         {
            var products = _productRepository.GetAllProducts().ToArray();
             return await Task.FromResult(products.Skip((page - 1) * quantity).Take(quantity));
+        }
+
+        public Task<IOrderedEnumerable<ProductViewModel>> GetAllProductsAsync(int page, int quantity, string orderBy,bool ascending)
+        {
+            var products = _productRepository.GetAllProducts().ToArray();
+            var productsSkip = products.Skip((page - 1) * quantity).Take(quantity);
+
+
+            if (ascending)
+            {
+                switch (orderBy.Trim().ToLower())
+                {
+                    case "productid":
+                        return Task.FromResult(productsSkip.OrderBy(p => p.ProductId));
+                    case "name":
+                        return Task.FromResult(productsSkip.OrderBy(p => p.Name));
+                    case "category":
+                        return Task.FromResult(productsSkip.OrderBy(p => p.Category));
+                    case "price":
+                        return Task.FromResult(productsSkip.OrderBy(p => p.Price));
+                    case "stocknumber":
+                        return Task.FromResult(productsSkip.OrderBy(p => p.StockNumber));
+                    default:
+                        return Task.FromResult(productsSkip.OrderBy(p => p.ProductId));
+                }
+            }
+            else
+            {
+                switch (orderBy.Trim().ToLower())
+                {
+                    case "productid":
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.ProductId));
+                    case "name":
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.Name));
+                    case "category":
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.Category));
+                    case "price":
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.Price));
+                    case "stocknumber":
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.StockNumber));
+                    default:
+                        return Task.FromResult(productsSkip.OrderByDescending(p => p.ProductId));
+                }
+            }
+
+            
         }
 
         public async Task<ProductViewModel> GetProduct(int productId)
