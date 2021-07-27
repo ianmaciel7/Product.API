@@ -36,6 +36,8 @@ namespace Product.API
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddDbContext<AppDbContext>(
                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product.API", Version = "v1" });
