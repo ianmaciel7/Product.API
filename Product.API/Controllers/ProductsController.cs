@@ -138,6 +138,10 @@ namespace Product.API.Controllers
             {
                 return Conflict(ex.Message);
             }
+            catch (ProductNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
@@ -153,14 +157,10 @@ namespace Product.API.Controllers
                 await _productService.DeleteProductAsync(productId);
                 return Ok();
             }
-            catch (ProductNameIsNotUniqueException ex)
+            catch (ProductNotFoundException ex)
             {
-                return Conflict(ex.Message);
-            }
-            catch (NegativeProductPriceException ex)
-            {
-                return Conflict(ex.Message);
-            }
+                return NotFound(ex.Message);
+            }          
             catch (Exception)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
